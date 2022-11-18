@@ -55,9 +55,11 @@ ENV ALIAS_FILE="${HOME_DIR}.alias"
 ########################
 ### go               ###
 ########################
-ENV GO_DOWNLOAD_TARGET "go1.19.3.linux-amd64.tar.gz"
-RUN sudo curl -L https://go.dev/dl/${GO_DOWNLOAD_TARGET} -o /opt/${GO_DOWNLOAD_TARGET}
-RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf /opt/${GO_DOWNLOAD_TARGET}
+ARG BUILDPLATFORM
+ENV GO_DOWNLOAD_TARGET "go1.19.3.${BUILDPLATFORM}.tar.gz"
+RUN sudo echo ${GO_DOWNLOAD_TARGET} | tr / - > /tmp/go_download_target
+RUN sudo curl -L https://go.dev/dl/$(cat /tmp/go_download_target) -o /opt/$(cat /tmp/go_download_target)
+RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf /opt/$(cat /tmp/go_download_target)
 RUN echo 'export PATH=$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
 	echo 'export PATH="'"${HOME_DIR}"'go/bin:$PATH"' >> "${ZPROFILE}"
 
