@@ -16,13 +16,13 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONT
     git \
     gnupg \
     less \
-	lsb-release \
+    lsb-release \
     postgresql-client \
     ssh \
     sshfs \
     sudo \
-	tzdata \
-	wget \
+    tzdata \
+    wget \
     vim \
     zsh
 
@@ -95,28 +95,29 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     autoconf \
     bison \
     build-essential \
-	libbz2-dev \
+    libbz2-dev \
     libffi-dev \
     libgdbm-dev \
-	libgmp-dev \
+    libgmp-dev \
     libncurses5-dev \
-	libpcap-dev \
+    libpcap-dev \
     libpq-dev \
     libreadline-dev \
     libssl-dev \
     libyaml-dev \
     manpages-dev \
-	mysql-server \
+    mysql-server \
     nmap \
     openvpn3 \
-	pkg-config \
-	python3.10 \
+    pkg-config \
+    python3.10 \
     smbclient \
     snmp \
     snmp-mibs-downloader \
-	tcpick \
-	whois \
-	yasm \
+    steghide \
+    tcpick \
+    whois \
+    yasm \
     zlib1g-dev  
 
 ########################
