@@ -181,5 +181,10 @@ RUN sudo git clone https://gitlab.com/exploit-database/exploitdb.git /opt/exploi
 RUN ln -sf /opt/exploit-database/searchsploit "${HOME_DIR}".local/bin/searchsploit
 RUN cp -n /opt/exploit-database/.searchsploit_rc "${HOME_DIR}"
 
+########################
+### chisel           ###
+########################
+RUN /usr/local/go/bin/go install github.com/jpillora/chisel@latest
+
 # Specifyin a login shell since containers will be attached to.
 CMD [ "/bin/zsh", "-l" ]
