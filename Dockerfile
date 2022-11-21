@@ -58,23 +58,23 @@ ENV GO_DOWNLOAD_TARGET "go1.19.3.${BUILDPLATFORM}.tar.gz"
 RUN sudo echo ${GO_DOWNLOAD_TARGET} | tr / - > /tmp/go_download_target
 RUN sudo curl -L https://go.dev/dl/$(cat /tmp/go_download_target) -o /opt/$(cat /tmp/go_download_target)
 RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf /opt/$(cat /tmp/go_download_target)
-RUN echo 'export PATH=$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
-	echo 'export PATH="'"${HOME_DIR}"'go/bin:$PATH"' >> "${ZPROFILE}"
+RUN echo 'export PATH="$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
+	echo 'export PATH="'"${HOME_DIR}"'go/bin:$PATH" ' >> "${ZPROFILE}"
 
 ########################
 ### openvpn          ###
 ########################
 ENV DISTRO "focal"
 ENV OPENVPN_URL "https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-${DISTRO}.list"
-RUN sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub && \
-sudo apt-key add openvpn-repo-pkg-key.pub && \
+RUN sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub -O /tmp/openvpn-repo-pkg-key.pub && \
+sudo apt-key add /tmp/openvpn-repo-pkg-key.pub && \
 sudo wget -O /etc/apt/sources.list.d/openvpn3.list ${OPENVPN_URL}
 
 ########################
 ### mysql            ###
 ########################
-RUN wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb && \
-	sudo dpkg -i mysql-apt-config_0.8.22-1_all.deb
+RUN wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb -O /tmp/mysql-apt-config_0.8.22-1_all.deb && \
+	sudo dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb
 
 ########################
 ### fonts            ###
@@ -84,6 +84,18 @@ RUN mkdir -p ".fonts" ".local/bin"
 RUN curl -L "https://github.com/abertsch/Menlo-for-Powerline/raw/master/Menlo%20for%20Powerline.ttf" \
     -o ".fonts/Menlo for Powerline.ttf" && \
     fc-cache -vf .fonts
+
+########################
+### pktriot          ###
+########################
+RUN wget -qO - https://download.packetriot.com/linux/debian/pubkey.gpg | sudo apt-key add -  
+
+RUN echo "\
+deb [arch=amd64] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-amd64 / \n\
+deb [arch=i386]  https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-i386  / \n\
+deb [arch=armhf] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-armhf / \n\
+deb [arch=arm64] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-arm64 / \n\
+" | sudo tee /etc/apt/sources.list.d/packetriot.list
 
 ########################
 ### apps             ###
@@ -108,6 +120,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     nmap \
     openvpn3 \
     pkg-config \
+    pktriot \
     python3.10 \
     smbclient \
     snmp \
@@ -124,14 +137,16 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
 RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | /bin/zsh
 RUN echo 'export PATH="'"${HOME_DIR}"'.rbenv/bin:$PATH"' >> "${ZPROFILE}" && \
     echo 'eval "$(rbenv init -)"' >> "${ZPROFILE}"
-
 RUN git clone https://github.com/rbenv/ruby-build.git && \
     PREFIX=/usr/local sudo ./ruby-build/install.sh
+RUN /home/dev/.rbenv/bin/rbenv install 3.1.2 && \
+    /home/dev/.rbenv/bin/rbenv global 3.1.2
 
 ########################
 ### nvm              ###
 ########################
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | PROFILE=${ZPROFILE} bash
+RUN . /home/dev/.profile && nvm install --lts && nvm use --lts
 
 ########################
 ### mibs downloader  ###
@@ -193,8 +208,15 @@ RUN /usr/local/go/bin/go install github.com/jpillora/chisel@latest
 ENV METASPLOIT_DOWNLOAD_URL "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb" 
 RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfinstall && /tmp/msfinstall
 
+########################
+### zsteg            ###
+########################
+RUN . ${ZPROFILE} && gem install zsteg
 
-
+########################
+### unminimize       ###
+########################
+RUN yes | sudo unminimize
 
 ########################
 ### COPY             ###
