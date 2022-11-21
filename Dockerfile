@@ -47,8 +47,6 @@ RUN useradd -ms /bin/zsh dev && \
 USER dev
 WORKDIR ${HOME_DIR}
 
-COPY .zshrc .zshrc
-
 ENV ZPROFILE="${HOME_DIR}.profile"
 ENV ALIAS_FILE="${HOME_DIR}.alias"
 
@@ -136,7 +134,7 @@ RUN git clone https://github.com/rbenv/ruby-build.git && \
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | PROFILE=${ZPROFILE} bash
 
 ########################
-### Mibs Downloader  ###
+### mibs downloader  ###
 ########################
 RUN sudo download-mibs
 
@@ -174,8 +172,8 @@ RUN echo 'alias sqlmap="python3 /opt/sqlmap-dev/sqlmap.py"' >> "${ALIAS_FILE}"
 ########################
 RUN sudo git clone https://github.com/openwall/john -b bleeding-jumbo /opt/john
 RUN cd /opt/john/src && sudo ./configure && sudo make -s clean && sudo make -sj4
-RUN echo 'alias sqlmap="john /opt/john/run/john"' >> "${ALIAS_FILE}" && \
-	sudo echo 'alias sqlmap="zip2john /opt/john/run/zip2john"' >> "${ALIAS_FILE}"
+RUN echo 'alias john="john /opt/john/run/john"' >> "${ALIAS_FILE}" && \
+	sudo echo 'alias zip2john="zip2john /opt/john/run/zip2john"' >> "${ALIAS_FILE}"
 
 ########################
 ### searchsploit     ###
@@ -194,6 +192,14 @@ RUN /usr/local/go/bin/go install github.com/jpillora/chisel@latest
 ########################
 ENV METASPLOIT_DOWNLOAD_URL "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb" 
 RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfinstall && /tmp/msfinstall
+
+
+
+
+########################
+### COPY             ###
+########################
+COPY .zshrc .zshrc
 
 # Specifyin a login shell since containers will be attached to.
 CMD [ "/bin/zsh", "-l" ]
