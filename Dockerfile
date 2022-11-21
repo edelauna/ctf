@@ -60,23 +60,23 @@ ENV GO_DOWNLOAD_TARGET "go1.19.3.${BUILDPLATFORM}.tar.gz"
 RUN sudo echo ${GO_DOWNLOAD_TARGET} | tr / - > /tmp/go_download_target
 RUN sudo curl -L https://go.dev/dl/$(cat /tmp/go_download_target) -o /opt/$(cat /tmp/go_download_target)
 RUN sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf /opt/$(cat /tmp/go_download_target)
-RUN echo 'export PATH=$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
-	echo 'export PATH="'"${HOME_DIR}"'go/bin:$PATH"' >> "${ZPROFILE}"
+RUN echo 'export PATH="$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
+	echo 'export PATH="'"${HOME_DIR}"'go/bin:$PATH" ' >> "${ZPROFILE}"
 
 ########################
 ### openvpn          ###
 ########################
 ENV DISTRO "focal"
 ENV OPENVPN_URL "https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-${DISTRO}.list"
-RUN sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub && \
-sudo apt-key add openvpn-repo-pkg-key.pub && \
+RUN sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub -O /tmp/openvpn-repo-pkg-key.pub && \
+sudo apt-key add /tmp/openvpn-repo-pkg-key.pub && \
 sudo wget -O /etc/apt/sources.list.d/openvpn3.list ${OPENVPN_URL}
 
 ########################
 ### mysql            ###
 ########################
-RUN wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb && \
-	sudo dpkg -i mysql-apt-config_0.8.22-1_all.deb
+RUN wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb -O /tmp/mysql-apt-config_0.8.22-1_all.deb && \
+	sudo dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb
 
 ########################
 ### fonts            ###
@@ -126,14 +126,16 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
 RUN curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | /bin/zsh
 RUN echo 'export PATH="'"${HOME_DIR}"'.rbenv/bin:$PATH"' >> "${ZPROFILE}" && \
     echo 'eval "$(rbenv init -)"' >> "${ZPROFILE}"
-
 RUN git clone https://github.com/rbenv/ruby-build.git && \
     PREFIX=/usr/local sudo ./ruby-build/install.sh
+RUN /home/dev/.rbenv/bin/rbenv install 3.1.2 && \
+    /home/dev/.rbenv/bin/rbenv global 3.1.2
 
 ########################
 ### nvm              ###
 ########################
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | PROFILE=${ZPROFILE} bash
+RUN . /home/dev/.profile && nvm install --lts && nvm use --lts
 
 ########################
 ### Mibs Downloader  ###
@@ -174,8 +176,8 @@ RUN echo 'alias sqlmap="python3 /opt/sqlmap-dev/sqlmap.py"' >> "${ALIAS_FILE}"
 ########################
 RUN sudo git clone https://github.com/openwall/john -b bleeding-jumbo /opt/john
 RUN cd /opt/john/src && sudo ./configure && sudo make -s clean && sudo make -sj4
-RUN echo 'alias sqlmap="john /opt/john/run/john"' >> "${ALIAS_FILE}" && \
-	sudo echo 'alias sqlmap="zip2john /opt/john/run/zip2john"' >> "${ALIAS_FILE}"
+RUN echo 'alias john="/opt/john/run/john"' >> "${ALIAS_FILE}" && \
+	sudo echo 'alias zip2john="/opt/john/run/zip2john"' >> "${ALIAS_FILE}"
 
 ########################
 ### searchsploit     ###
@@ -194,6 +196,12 @@ RUN /usr/local/go/bin/go install github.com/jpillora/chisel@latest
 ########################
 ENV METASPLOIT_DOWNLOAD_URL "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb" 
 RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfinstall && /tmp/msfinstall
+
+
+########################
+### unminimize       ###
+########################
+RUN yes | sudo unminimize
 
 # Specifyin a login shell since containers will be attached to.
 CMD [ "/bin/zsh", "-l" ]
