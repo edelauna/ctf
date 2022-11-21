@@ -197,6 +197,10 @@ RUN /usr/local/go/bin/go install github.com/jpillora/chisel@latest
 ENV METASPLOIT_DOWNLOAD_URL "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb" 
 RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfinstall && /tmp/msfinstall
 
+########################
+### zsteg            ###
+########################
+RUN . ${ZPROFILE} && gem install zsteg
 
 ########################
 ### unminimize       ###
