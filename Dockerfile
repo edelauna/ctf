@@ -88,6 +88,18 @@ RUN curl -L "https://github.com/abertsch/Menlo-for-Powerline/raw/master/Menlo%20
     fc-cache -vf .fonts
 
 ########################
+### pktriot          ###
+########################
+RUN wget -qO - https://download.packetriot.com/linux/debian/pubkey.gpg | sudo apt-key add -  
+
+RUN echo "\
+deb [arch=amd64] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-amd64 / \n\
+deb [arch=i386]  https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-i386  / \n\
+deb [arch=armhf] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-armhf / \n\
+deb [arch=arm64] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-arm64 / \n\
+" | sudo tee /etc/apt/sources.list.d/packetriot.list
+
+########################
 ### apps             ###
 ########################
 RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
@@ -110,6 +122,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     nmap \
     openvpn3 \
     pkg-config \
+    pktriot \
     python3.10 \
     smbclient \
     snmp \
