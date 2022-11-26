@@ -184,6 +184,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     snmp-mibs-downloader \
     steghide \
     tcpick \
+    unzip \
     whois \
     yasm \
     zlib1g-dev
