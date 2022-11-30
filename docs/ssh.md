@@ -1,6 +1,9 @@
 ## SSH
 
 ### Set-up
+Useful if using openvpn within the container, and then setting up a SOCKs proxy in Burp.
+Can therefore modify the /etc/hosts file within container vs. on host machine.
+* Add an ssh public key to ~/.ssh/authorized_keys in Docker container
 * `ssh -N -D 9090 ctf` - sets up a SOCKS gateway to ssh configured route ctf (not detailed)
 * Update Firefox Manual Proxy Settings (Settings -> Network & Settings):
     * SOCKS Host 127.0.0.1 Port: 9090
@@ -17,4 +20,4 @@ Note: SSH home and files cannot be writable otherwise will cause ssh errors
 
 ### Hosts Files
 To follow redirects can update host files as such
-* `echo "$T ${cname.of.redirect}" | sudo tee -a /etc/hosts` 
+* `echo "$T ${cname.of.redirect}" | sudo tee -a /etc/hosts`
