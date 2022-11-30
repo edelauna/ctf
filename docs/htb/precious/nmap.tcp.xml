@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.80 scan initiated Wed Nov 30 15:34:54 2022 as: nmap -p22,80 -sSCV -v -oA nmap.tcp -T4 10.129.80.224 -->
+<nmaprun scanner="nmap" args="nmap -p22,80 -sSCV -v -oA nmap.tcp -T4 10.129.80.224" start="1669822494" startstr="Wed Nov 30 15:34:54 2022" version="7.80" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="2" services="22,80"/>
+<verbose level="1"/>
+<debugging level="0"/>
+<taskbegin task="NSE" time="1669822494"/>
+<taskend task="NSE" time="1669822494"/>
+<taskbegin task="NSE" time="1669822494"/>
+<taskend task="NSE" time="1669822494"/>
+<taskbegin task="NSE" time="1669822494"/>
+<taskend task="NSE" time="1669822494"/>
+<taskbegin task="Ping Scan" time="1669822494"/>
+<taskend task="Ping Scan" time="1669822494" extrainfo="1 total hosts"/>
+<taskbegin task="Parallel DNS resolution of 1 host." time="1669822494"/>
+<taskend task="Parallel DNS resolution of 1 host." time="1669822495"/>
+<taskbegin task="SYN Stealth Scan" time="1669822495"/>
+<taskend task="SYN Stealth Scan" time="1669822495" extrainfo="2 total ports"/>
+<taskbegin task="Service scan" time="1669822496"/>
+<taskend task="Service scan" time="1669822502" extrainfo="2 services on 1 host"/>
+<taskbegin task="NSE" time="1669822502"/>
+<taskend task="NSE" time="1669822503"/>
+<taskbegin task="NSE" time="1669822503"/>
+<taskend task="NSE" time="1669822503"/>
+<taskbegin task="NSE" time="1669822503"/>
+<taskend task="NSE" time="1669822503"/>
+<host starttime="1669822494" endtime="1669822503"><status state="up" reason="echo-reply" reason_ttl="63"/>
+<address addr="10.129.80.224" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="22"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="ssh" product="OpenSSH" version="8.4p1 Debian 5+deb11u1" extrainfo="protocol 2.0" ostype="Linux" method="probed" conf="10"><cpe>cpe:/a:openbsd:openssh:8.4p1</cpe><cpe>cpe:/o:linux:linux_kernel</cpe></service></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack" reason_ttl="63"/><service name="http" product="nginx" version="1.18.0" method="probed" conf="10"><cpe>cpe:/a:igor_sysoev:nginx:1.18.0</cpe></service><script id="http-methods" output="&#xa;  Supported Methods: GET HEAD POST OPTIONS"><table key="Supported Methods">
+<elem>GET</elem>
+<elem>HEAD</elem>
+<elem>POST</elem>
+<elem>OPTIONS</elem>
+</table>
+</script><script id="http-server-header" output="nginx/1.18.0"><elem>nginx/1.18.0</elem>
+</script><script id="http-title" output="Did not follow redirect to http://precious.htb/"><elem key="redirect_url">http://precious.htb/</elem>
+</script></port>
+</ports>
+<times srtt="33221" rttvar="19207" to="110049"/>
+</host>
+<taskbegin task="NSE" time="1669822503"/>
+<taskend task="NSE" time="1669822503"/>
+<taskbegin task="NSE" time="1669822503"/>
+<taskend task="NSE" time="1669822503"/>
+<taskbegin task="NSE" time="1669822503"/>
+<taskend task="NSE" time="1669822503"/>
+<runstats><finished time="1669822503" timestr="Wed Nov 30 15:35:03 2022" elapsed="9.47" summary="Nmap done at Wed Nov 30 15:35:03 2022; 1 IP address (1 host up) scanned in 9.47 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>
