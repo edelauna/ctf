@@ -74,6 +74,8 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONT
     apt-utils \
     ca-certificates \
     curl \
+    dbus \
+    dnsutils \
     file \
     fontconfig \
     git \
@@ -100,7 +102,7 @@ RUN git clone https://github.com/zsh-users/zsh-autosuggestions.git /usr/local/sh
 
 ### user setup       ###
 ########################
-ENV HOME_DIR "/home/dev/" 
+ENV HOME_DIR "/home/dev/"
 
 RUN useradd -ms /bin/zsh dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -141,7 +143,7 @@ RUN curl -L "https://github.com/abertsch/Menlo-for-Powerline/raw/master/Menlo%20
 
 ### pktriot          ###
 ########################
-RUN wget -qO - https://download.packetriot.com/linux/debian/pubkey.gpg | sudo apt-key add -  
+RUN wget -qO - https://download.packetriot.com/linux/debian/pubkey.gpg | sudo apt-key add -
 
 RUN echo "\
 deb [arch=amd64] https://download.packetriot.com/linux/debian/buster/stable/non-free/binary-amd64 / \n\
@@ -169,6 +171,8 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     libyaml-dev \
     manpages-dev \
     mysql-server \
+    netcat \
+    net-tools \
     nmap \
     openvpn3 \
     pkg-config \
@@ -181,7 +185,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     tcpick \
     whois \
     yasm \
-    zlib1g-dev  
+    zlib1g-dev
 
 ### rbenv            ###
 ########################
@@ -233,7 +237,7 @@ COPY --from=git_builder /usr/share/SecLists /usr/share/SecLists
 ### sqlmap           ###
 ########################
 COPY --from=git_builder /opt/sqlmap-dev /opt/sqlmap-dev
-RUN echo 'alias sqlmap="python3 /opt/sqlmap-dev/sqlmap.py"' >> "${ALIAS_FILE}" 
+RUN echo 'alias sqlmap="python3 /opt/sqlmap-dev/sqlmap.py"' >> "${ALIAS_FILE}"
 
 ### john the ripper  ###
 ########################
@@ -250,6 +254,9 @@ RUN cp -n /opt/exploit-database/.searchsploit_rc "${HOME_DIR}"
 ### misc             ###
 ########################
 COPY .zshrc .zshrc
+COPY --chmod=0755 bin/docker-entrypoint.sh /home/dev/.local/bin/docker-entrypoint.sh
+
+ENTRYPOINT [ "/bin/zsh", "/home/dev/.local/bin/docker-entrypoint.sh" ]
 
 # Specifyin a login shell since containers will be attached to.
 CMD [ "/bin/zsh", "-l" ]
