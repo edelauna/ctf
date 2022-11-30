@@ -182,6 +182,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     smbclient \
     snmp \
     snmp-mibs-downloader \
+    socat \
     steghide \
     tcpick \
     unzip \
