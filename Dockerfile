@@ -229,7 +229,6 @@ RUN . ${ZPROFILE} && gem install zsteg
 ########################
 RUN yes | sudo unminimize
 
-########################
 ### pip              ###
 ########################
 RUN curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && \
