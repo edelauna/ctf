@@ -159,6 +159,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     autoconf \
     bison \
     build-essential \
+    iputils-ping \
     libbz2-dev \
     libffi-dev \
     libgdbm-dev \
@@ -181,8 +182,10 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     smbclient \
     snmp \
     snmp-mibs-downloader \
+    sqlite \
     steghide \
     tcpick \
+    unzip \
     whois \
     yasm \
     zlib1g-dev
