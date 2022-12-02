@@ -179,10 +179,12 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     pkg-config \
     pktriot \
     python3.10 \
+    python3-distutils \
     smbclient \
     snmp \
     snmp-mibs-downloader \
     sqlite \
+    socat \
     steghide \
     tcpick \
     unzip \
@@ -228,6 +230,11 @@ RUN . ${ZPROFILE} && gem install zsteg
 ### unminimize       ###
 ########################
 RUN yes | sudo unminimize
+
+### pip              ###
+########################
+RUN curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && \
+  python3 /tmp/get-pip.py
 
 ########################
 ### COPY             ###

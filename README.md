@@ -2,10 +2,8 @@
 Helpful notes and a docker image for running some hecker utilities.
 
 ## How I use
-* Build docker image `docker build -t ctf:latest .`
-* Run it `docker run --rm --name ctf -it -h ctf -v $(pwd):/home/dev/src ctf `
-* Run docker image `${cmd_here}`
-* Attach to running container from vscode
+* `docker-compose up` 
+* [Attach to running container](https://code.visualstudio.com/docs/devcontainers/attach-container#:~:text=To%20attach%20to%20a%20Docker,you%20want%20to%20connect%20to.) `ctf` vscode vscode  from vscode
     * Note: requires remote explorer plugin
 * Check out `docs/` section for available utilities and how to use. 
     * Note: `$T` variables represents target IP or DNS
