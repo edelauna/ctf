@@ -180,6 +180,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     pktriot \
     python3.10 \
     python3-distutils \
+    shellcheck \
     smbclient \
     snmp \
     snmp-mibs-downloader \
@@ -235,6 +236,10 @@ RUN yes | sudo unminimize
 ########################
 RUN curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && \
   python3 /tmp/get-pip.py
+
+### hashid           ###
+########################
+RUN pip install hashid
 
 ########################
 ### COPY             ###
