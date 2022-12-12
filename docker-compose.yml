@@ -3,13 +3,17 @@ services:
   ctf:
     build:
       context: .
-    hostname: ctf
+    hostname: htb
     stdin_open: true # docker run -i
     tty: true # docker run -t
     volumes:
       - ./:/home/dev/src
     ports:
       - "2022:22"
+    dns:
+      - 8.8.8.8
     # Uncomment if want to use openvpn
     # Following this issue: https://github.com/OpenVPN/openvpn3-linux/issues/86
     # privileged: true
+    cap_add:
+      - NET_ADMIN
