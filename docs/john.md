@@ -7,4 +7,4 @@
 
 **Key Commands:**
 * Password protected zips: `zip2john ${thezip} > hashes`
-* Cracking: `john -wordlist=/home/azureuser/src/SecLists/Passwords/Leaked-Databases/rockyou.txt hashes`
+* Cracking: `john -wordlist=/usr/share/SecLists/Passwords/Leaked-Databases/rockyou.txt hashes`
