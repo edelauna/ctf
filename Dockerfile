@@ -39,8 +39,14 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONT
     build-essential \
     ca-certificates \
     git \
+    libbz2-dev \
+    libgmp-dev \
+    libpcap-dev \
     libssl-dev \
-    make
+    pkg-config \
+    make \
+    zlib1g-dev \ 
+    yasm 
 
 ### john the ripper  ###
 ########################
@@ -257,8 +263,8 @@ RUN echo 'alias sqlmap="python3 /opt/sqlmap-dev/sqlmap.py"' >> "${ALIAS_FILE}"
 ### john the ripper  ###
 ########################
 COPY --from=git_builder /opt/john/ /opt/john/
-RUN echo 'alias john="john /opt/john/run/john"' >> "${ALIAS_FILE}" && \
-	sudo echo 'alias zip2john="zip2john /opt/john/run/zip2john"' >> "${ALIAS_FILE}"
+RUN echo 'alias john="/opt/john/run/john"' >> "${ALIAS_FILE}" && \
+	sudo echo 'alias zip2john="/opt/john/run/zip2john"' >> "${ALIAS_FILE}"
 
 ### searchsploit     ###
 ########################

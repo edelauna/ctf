@@ -13,6 +13,8 @@ services:
       - "943:943"
       - "9443:9443"
       - "1194:1194/udp"
+    dns:
+      - 8.8.8.8
     # Uncomment if want to use openvpn
     # Following this issue: https://github.com/OpenVPN/openvpn3-linux/issues/86
     # privileged: true
