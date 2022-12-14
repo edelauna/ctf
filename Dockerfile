@@ -271,6 +271,8 @@ RUN cp -n /opt/exploit-database/.searchsploit_rc "${HOME_DIR}"
 COPY .zshrc .zshrc
 COPY --chmod=0755 bin/docker-entrypoint.sh /home/dev/.local/bin/docker-entrypoint.sh
 
+RUN sudo chown -R dev:dev $HOME_DIR
+
 ENTRYPOINT [ "/bin/zsh", "/home/dev/.local/bin/docker-entrypoint.sh" ]
 
 # Specifyin a login shell since containers will be attached to.
