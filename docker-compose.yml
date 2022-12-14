@@ -10,6 +10,11 @@ services:
       - ./:/home/dev/src
     ports:
       - "2022:22"
+      - "943:943"
+      - "9443:9443"
+      - "1194:1194/udp"
     # Uncomment if want to use openvpn
     # Following this issue: https://github.com/OpenVPN/openvpn3-linux/issues/86
     # privileged: true
+    cap_add:
+      - NET_ADMIN
