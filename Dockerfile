@@ -65,12 +65,12 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONT
 
 ### john the ripper  ###
 ########################
-RUN git clone https://github.com/openwall/john -b bleeding-jumbo /opt/john
+RUN until git clone https://github.com/openwall/john -b bleeding-jumbo /opt/john; do true; done
 RUN cd /opt/john/src && ./configure && make -s clean && make -sj4
 
 ### seclists         ###
 ########################
-RUN git clone --depth 1 https://github.com/danielmiessler/SecLists.git /usr/share/SecLists
+RUN until git clone --depth 1 https://github.com/danielmiessler/SecLists.git /usr/share/SecLists; do true; done
 
 ### sqlmap           ###
 ########################
@@ -78,6 +78,7 @@ RUN git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git /opt/sqlmap-
 
 ### searchsploit     ###
 ########################
+RUN until git clone https://gitlab.com/exploit-database/exploitdb.git /opt/exploit-database; do true; done
 
 ### phpggc           ###
 ########################
@@ -140,7 +141,7 @@ ENV ALIAS_FILE="${HOME_DIR}.alias"
 ### go               ###
 ########################
 COPY --from=go_builder /usr/local/go /usr/local/go
-COPY --from=go_builder /root/go/bin "$HOME_DIR/go/bin"
+COPY --from=go_builder /root/go/bin "${HOME_DIR}go/bin"
 RUN echo 'export PATH="$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
 	echo 'export PATH="'"${HOME_DIR}"'go/bin:$PATH" ' >> "${ZPROFILE}"
 
@@ -255,10 +256,6 @@ RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfins
 ########################
 RUN . ${ZPROFILE} && gem install zsteg
 
-### unminimize       ###
-########################
-RUN yes | sudo unminimize
-
 ### pip              ###
 ########################
 RUN curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && \
@@ -266,7 +263,11 @@ RUN curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py && \
 
 ### hashid           ###
 ########################
-RUN pip install hashid
+RUN python3 -m pip install hashid
+
+### unminimize       ###
+########################
+RUN yes | sudo unminimize
 
 ########################
 ### COPY             ###
