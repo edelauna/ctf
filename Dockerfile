@@ -78,7 +78,10 @@ RUN git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git /opt/sqlmap-
 
 ### searchsploit     ###
 ########################
-RUN git clone https://gitlab.com/exploit-database/exploitdb.git /opt/exploit-database
+
+### phpggc           ###
+########################
+RUN git clone https://github.com/ambionics/phpggc.git /opt/phpggc
 
 ########################
 ###     RUNNER       ###
@@ -181,6 +184,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     bison \
     build-essential \
     iputils-ping \
+    libapache2-mod-php \
     libbz2-dev \
     libffi-dev \
     libgdbm-dev \
@@ -199,6 +203,8 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     openvpn3 \
     pkg-config \
     pktriot \
+    php-common \
+    php-cli \
     python3.10 \
     python3-distutils \
     shellcheck \
@@ -286,6 +292,11 @@ RUN echo 'alias john="/opt/john/run/john"' >> "${ALIAS_FILE}" && \
 COPY --from=git_builder /opt/exploit-database /opt/exploit-database
 RUN ln -sf /opt/exploit-database/searchsploit "${HOME_DIR}".local/bin/searchsploit
 RUN cp -n /opt/exploit-database/.searchsploit_rc "${HOME_DIR}"
+
+### phpggc           ###
+########################
+COPY --from=git_builder /opt/sqlmap-dev /opt/phpggc
+RUN echo 'alias phpggc="/opt/phpggc/phpggc"' >> "${ALIAS_FILE}"
 
 ### exiftool         ###
 ########################
