@@ -3,6 +3,21 @@
 ########################
 
 ########################
+### usr/local        ###
+########################
+FROM ubuntu as usr_local_builder
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONTEND=noninteractive \
+	apt-get install -y --no-install-recommends \
+    ca-certificates \
+    wget
+
+### exiftool         ###
+########################
+RUN wget -L -q https://exiftool.org/Image-ExifTool-12.52.tar.gz -O /tmp/Image-ExifTool-12.52.tar.gz \
+    --tries=10 --retry-connrefused -c
+RUN rm -rf /usr/local/Image-ExifTool-12.52 && tar -C /usr/local -xzf /tmp/Image-ExifTool-12.52.tar.gz
+
+########################
 ### go               ###
 ########################
 FROM --platform=$BUILDPLATFORM ubuntu as go_builder
@@ -271,6 +286,11 @@ RUN echo 'alias john="/opt/john/run/john"' >> "${ALIAS_FILE}" && \
 COPY --from=git_builder /opt/exploit-database /opt/exploit-database
 RUN ln -sf /opt/exploit-database/searchsploit "${HOME_DIR}".local/bin/searchsploit
 RUN cp -n /opt/exploit-database/.searchsploit_rc "${HOME_DIR}"
+
+### exiftool         ###
+########################
+COPY --from=usr_local_builder /usr/local/Image-ExifTool-12.52 /usr/local/Image-ExifTool-12.52
+RUN echo 'alias exiftool="/usr/local/Image-ExifTool-12.52/exiftool"' >> "${ALIAS_FILE}"
 
 ### misc             ###
 ########################
