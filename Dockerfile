@@ -175,8 +175,8 @@ sudo wget -O /etc/apt/sources.list.d/openvpn3.list ${OPENVPN_URL}
 
 ### mysql            ###
 ########################
-RUN wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb -O /tmp/mysql-apt-config_0.8.22-1_all.deb && \
-	sudo dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb
+# RUN wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb -O /tmp/mysql-apt-config_0.8.22-1_all.deb && \
+#	sudo dpkg -i /tmp/mysql-apt-config_0.8.22-1_all.deb
 
 ### fonts            ###
 ########################
@@ -217,7 +217,7 @@ RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
     libssl-dev \
     libyaml-dev \
     manpages-dev \
-    mysql-server \
+#    mysql-server \
     netcat \
     net-tools \
     nmap \
@@ -269,8 +269,9 @@ RUN sudo chmod +x /usr/local/bin/enum4linux
 
 ### metasploit       ###
 ########################
-ENV METASPLOIT_DOWNLOAD_URL "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb"
-RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfinstall && /tmp/msfinstall
+# Commenting out - never used this.
+# ENV METASPLOIT_DOWNLOAD_URL "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb"
+# RUN curl "${METASPLOIT_DOWNLOAD_URL}" > /tmp/msfinstall && chmod 755 /tmp/msfinstall && /tmp/msfinstall
 
 ### zsteg            ###
 ########################
@@ -289,6 +290,18 @@ RUN python3 -m pip install hashid
 ########################
 RUN sudo wget -L -q https://github.com/frohoff/ysoserial/releases/latest/download/ysoserial-all.jar \
      -O /usr/share/ysoserial.jar --tries=10 --retry-connrefused -c
+
+### pearl            ###
+########################
+RUN sudo apt-get update && sudo apt-get upgrade -y --no-install-recommends && \
+	DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
+    libwww-perl \
+    libcrypt-ssleay-pearl
+
+### padmapper        ###
+########################
+RUN curl -L https://raw.githubusercontent.com/AonCyberLabs/PadBuster/master/padBuster.pl \
+-o /opt/padBuster.pl
 
 ### unminimize       ###
 ########################
@@ -321,7 +334,7 @@ RUN cp -n /opt/exploit-database/.searchsploit_rc "${HOME_DIR}"
 
 ### phpggc           ###
 ########################
-COPY --from=git_builder /opt/sqlmap-dev /opt/phpggc
+COPY --from=git_builder /opt/phpggc /opt/phpggc
 RUN echo 'alias phpggc="/opt/phpggc/phpggc"' >> "${ALIAS_FILE}"
 
 ### exiftool         ###
