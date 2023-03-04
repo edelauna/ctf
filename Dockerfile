@@ -1,3 +1,4 @@
+ARG UBUNTU_DISTRO=focal
 ########################
 ###     BUILDERS     ###
 ########################
@@ -5,7 +6,7 @@
 ########################
 ### usr/local        ###
 ########################
-FROM ubuntu as usr_local_builder
+FROM ubuntu:${UBUNTU_DISTRO} as usr_local_builder
 RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONTEND=noninteractive \
 	apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -20,7 +21,7 @@ RUN rm -rf /usr/local/Image-ExifTool-12.52 && tar -C /usr/local -xzf /tmp/Image-
 ########################
 ### go               ###
 ########################
-FROM --platform=$BUILDPLATFORM ubuntu as go_builder
+FROM ubuntu:${UBUNTU_DISTRO} as go_builder
 RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONTEND=noninteractive \
 	apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -48,7 +49,7 @@ RUN /usr/local/go/bin/go install github.com/jpillora/chisel@latest
 ########################
 ### from git         ###
 ########################
-FROM ubuntu as git_builder
+FROM ubuntu:${UBUNTU_DISTRO} as git_builder
 RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONTEND=noninteractive \
 	apt-get install -y --no-install-recommends \
     build-essential \
@@ -87,7 +88,7 @@ RUN git clone https://github.com/ambionics/phpggc.git /opt/phpggc
 ########################
 ###     RUNNER       ###
 ########################
-FROM ubuntu:focal
+FROM ubuntu:${UBUNTU_DISTRO}
 LABEL maintainer="@edelauna"
 
 ### General Pre-reqs ###
@@ -156,8 +157,7 @@ RUN echo 'export PATH="$PATH:/usr/local/go/bin"' >> "${ZPROFILE}" && \
 
 ### openvpn          ###
 ########################
-ENV DISTRO "focal"
-ENV OPENVPN_URL "https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-${DISTRO}.list"
+ENV OPENVPN_URL "https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-${UBUNTU_DISTRO}.list"
 RUN sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub -O /tmp/openvpn-repo-pkg-key.pub && \
 sudo apt-key add /tmp/openvpn-repo-pkg-key.pub && \
 sudo wget -O /etc/apt/sources.list.d/openvpn3.list ${OPENVPN_URL}
