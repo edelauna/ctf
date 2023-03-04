@@ -54,6 +54,7 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && DEBIAN_FRONT
 	apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
+    curl \
     git \
     libbz2-dev \
     libgmp-dev \
@@ -84,6 +85,16 @@ RUN until git clone https://gitlab.com/exploit-database/exploitdb.git /opt/explo
 ### phpggc           ###
 ########################
 RUN git clone https://github.com/ambionics/phpggc.git /opt/phpggc
+
+########################
+### rust             ###
+########################
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y 
+
+### tunnelto         ###
+########################
+RUN git clone https://github.com/agrinman/tunnelto.git /opt/tunnelto
+RUN /root/.cargo/bin/cargo install tunnelto
 
 ########################
 ###     RUNNER       ###
@@ -317,6 +328,10 @@ RUN echo 'alias phpggc="/opt/phpggc/phpggc"' >> "${ALIAS_FILE}"
 ########################
 COPY --from=usr_local_builder /usr/local/Image-ExifTool-12.52 /usr/local/Image-ExifTool-12.52
 RUN echo 'alias exiftool="/usr/local/Image-ExifTool-12.52/exiftool"' >> "${ALIAS_FILE}"
+
+### tunnelto         ###
+########################
+COPY --from=git_builder /root/.cargo/bin/tunnelto /usr/local/bin/tunnelto
 
 ### misc             ###
 ########################
